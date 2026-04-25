@@ -2,20 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mint.ai</title>
   <style>
     @font-face {
       font-family: 'CalSans';
       src: url('../assets/Cal_sans/CalSans-SemiBold.woff2') format('woff2'),
            url('../assets/Cal_sans/CalSans-SemiBold.ttf') format('truetype');
-      font-weight: 600;
     }
-
     @font-face {
-      font-family: 'FunnelSans';
-      src: url('../assets/Funnel_sans/FunnelSans-Regular.ttf') format('truetype');
+      font-family: 'Gabarito';
+      src: url('../assets/Gabarito/Gabarito-Regular.ttf') format('truetype');
       font-weight: 400;
+    }
+    @font-face {
+      font-family: 'Gabarito';
+      src: url('../assets/Gabarito/Gabarito-Bold.ttf') format('truetype');
+      font-weight: 700;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -39,25 +41,45 @@
       animation: fadeIn 0.8s ease forwards;
     }
 
+    /* Logo with bg */
     .logo-wrapper {
       position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 24px;
+      margin-bottom: 32px;
     }
 
-    .bg-vector {
+    .logo-bg {
       position: absolute;
-      width: 320px;
-      opacity: 0.85;
+      width: 260px;
+      opacity: 0.9;
     }
 
     .mint-logo {
       position: relative;
-      width: 180px;
+      width: 160px;
       z-index: 2;
       animation: floatLogo 3s ease-in-out infinite;
+    }
+
+    /* Title with bg cover - Fix 1 */
+    .title-wrapper {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+
+    .title-bg {
+      position: absolute;
+      /* stretches to fit the text width + padding */
+      width: 110%;
+      height: 130%;
+      object-fit: fill;
+      opacity: 0.85;
+      left: -5%;
     }
 
     .brand-name {
@@ -65,15 +87,19 @@
       font-size: 52px;
       color: #FFFFFF;
       letter-spacing: -1px;
-      margin-bottom: 8px;
+      position: relative;
+      z-index: 2;
+      padding: 0 16px;
     }
 
     .brand-tagline {
-      font-family: 'FunnelSans', sans-serif;
-      font-size: 16px;
+      font-family: 'Gabarito', sans-serif;
+      font-weight: 400;
+      font-size: 15px;
       color: #3D725E;
       font-style: italic;
       letter-spacing: 0.5px;
+      margin-top: 4px;
     }
 
     .loading-bar {
@@ -96,12 +122,10 @@
       from { opacity: 0; transform: translateY(20px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-
     @keyframes floatLogo {
       0%, 100% { transform: translateY(0px); }
       50%       { transform: translateY(-8px); }
     }
-
     @keyframes loadFill {
       from { width: 0%; }
       to   { width: 100%; }
@@ -110,15 +134,24 @@
 </head>
 <body>
   <div class="splash-container">
+
     <div class="logo-wrapper">
-      <img class="bg-vector" src="../assets/images/Vector 54.png" alt="">
+      <img class="logo-bg" src="../assets/images/Vector 54.png" alt="">
       <img class="mint-logo" src="../assets/images/Logo_with_nobg.png" alt="Mint.ai">
     </div>
-    <div class="brand-name">Mint.ai</div>
+
+    <!-- Title with dark green bg cover sized to text — Fix 1 -->
+    <div class="title-wrapper">
+      <img class="title-bg" src="../assets/images/Vector 54.png" alt="">
+      <span class="brand-name">Mint.ai</span>
+    </div>
+
     <div class="brand-tagline">"Your Minting Mentor"</div>
+
     <div class="loading-bar">
       <div class="loading-fill"></div>
     </div>
+
   </div>
 </body>
 </html>

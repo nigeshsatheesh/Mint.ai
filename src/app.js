@@ -1,4 +1,6 @@
 const { ipcRenderer } = require('electron')
+const path = require('path')
+const fs = require('fs')
 
 // ─── Window Controls ───
 document.getElementById('btn-minimize')
@@ -16,7 +18,6 @@ menuBtn?.addEventListener('click', (e) => {
   e.stopPropagation()
   dropdownMenu.classList.toggle('show')
 })
-
 document.addEventListener('click', () => {
   dropdownMenu?.classList.remove('show')
 })
@@ -31,11 +32,9 @@ sidebarBtn?.addEventListener('click', () => {
   sidebarOpen = !sidebarOpen
   sidebar.classList.toggle('open', sidebarOpen)
   sidebarBtn.classList.toggle('open', sidebarOpen)
-
   sidebarIcon.src = sidebarOpen
     ? '../assets/icons/Sidebar_opened.png'
     : '../assets/icons/Sidebar_closed.png'
-
   loadChatHistory()
 })
 
@@ -53,9 +52,8 @@ searchBtn?.addEventListener('click', () => {
 })
 
 searchOverlay?.addEventListener('click', (e) => {
-  if (e.target === searchOverlay) {
+  if (e.target === searchOverlay)
     searchOverlay.classList.remove('show')
-  }
 })
 
 searchInput?.addEventListener('input', (e) => {
@@ -71,25 +69,30 @@ function renderSearchResults(query) {
   )
   results.innerHTML = filtered.length
     ? filtered.map(c => `
-        <div class="search-result-item" onclick="openChat('${c.id}')">
-          <img src="../assets/icons/Projects.png" alt="">
+        <div class="search-result-item"
+             onclick="openChat('${c.id}')">
+          <img src="../assets/icons/Chat.png" alt="">
           ${c.title}
         </div>`).join('')
-    : `<div style="padding:20px;text-align:center;color:#444;font-size:13px">
+    : `<div style="padding:20px;text-align:center;
+                   color:#444;font-family:'Gabarito',sans-serif;
+                   font-size:13px">
          No chats found
        </div>`
 }
 
-// ─── Chat History Storage ───
+// ─── Storage ───
 function getChats() {
-  const raw = localStorage.getItem('mintai_chats')
-  return raw ? JSON.parse(raw) : []
+  try {
+    const raw = localStorage.getItem('mintai_chats')
+    return raw ? JSON.parse(raw) : []
+  } catch { return [] }
 }
 
 function saveChat(chat) {
   const chats = getChats()
-  const existing = chats.findIndex(c => c.id === chat.id)
-  if (existing >= 0) chats[existing] = chat
+  const idx = chats.findIndex(c => c.id === chat.id)
+  if (idx >= 0) chats[idx] = chat
   else chats.unshift(chat)
   localStorage.setItem('mintai_chats', JSON.stringify(chats))
 }
@@ -100,11 +103,14 @@ function loadChatHistory() {
   const chats = getChats()
   container.innerHTML = chats.length
     ? chats.map(c => `
-        <div class="chat-history-item" onclick="openChat('${c.id}')">
-          <img src="../assets/icons/Projects.png" alt="">
+        <div class="chat-history-item"
+             onclick="openChat('${c.id}')">
+          <img src="../assets/icons/Chat.png" alt="">
           ${c.title}
         </div>`).join('')
-    : `<div style="padding:16px;color:#333;font-size:12px">
+    : `<div style="padding:16px;color:#333;
+                   font-family:'Gabarito',sans-serif;
+                   font-size:12px">
          No previous chats
        </div>`
 }
@@ -126,7 +132,7 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
   })
 })
 
-// ─── Home Input — Send on Enter ───
+// ─── Home Input ───
 const homeInput = document.getElementById('home-input')
 
 homeInput?.addEventListener('keydown', (e) => {
@@ -152,44 +158,97 @@ function startNewChat() {
     messages: []
   }
   saveChat(chat)
-  window.location.href = `chat.html?id=${id}&first=${encodeURIComponent(msg)}`
+  window.location.href =
+    `chat.html?id=${id}&first=${encodeURIComponent(msg)}&mode=${currentMode}`
 }
 
-// ─── New Chat Button ───
 document.getElementById('new-chat-btn')?.addEventListener('click', () => {
-  homeInput.value = ''
-  homeInput.style.height = 'auto'
-})
-
-// ─── Attachment ───
-const attachBtn = document.getElementById('attach-btn')
-const fileInput = document.getElementById('file-input')
-
-attachBtn?.addEventListener('click', () => fileInput.click())
-
-fileInput?.addEventListener('change', (e) => {
-  const file = e.target.files[0]
-  if (file) {
-    console.log('File selected:', file.name)
-    // File handling will be added in next phase
+  if (homeInput) {
+    homeInput.value = ''
+    homeInput.style.height = 'auto'
   }
 })
 
-// ─── Microphone ───
+// ─── Fix 11 — Attachment (properly working) ───
+const attachBtn = document.getElementById('attach-btn')
+const fileInput = document.getElementById('file-input')
+
+attachBtn?.addEventListener('click', (e) => {
+  e.preventDefault()
+  e.stopPropagation()
+  fileInput.click()
+})
+
+fileInput?.addEventListener('change', (e) => {
+  const file = e.target.files[0]
+  if (!file) return
+
+  const reader = new FileReader()
+  reader.onload = (evt) => {
+    const content = evt.target.result
+    if (homeInput) {
+      homeInput.value =
+        `[Attached: ${file.name}]\n\n` + homeInput.value
+      homeInput.style.height = 'auto'
+      homeInput.style.height = homeInput.scrollHeight + 'px'
+    }
+  }
+
+  // Read text files as text, others as data URL
+  if (file.type.startsWith('text') ||
+      file.name.endsWith('.js') ||
+      file.name.endsWith('.py') ||
+      file.name.endsWith('.cpp') ||
+      file.name.endsWith('.java')) {
+    reader.readAsText(file)
+  } else {
+    reader.readAsDataURL(file)
+  }
+
+  // Reset so same file can be selected again
+  fileInput.value = ''
+})
+
+// ─── Fix 11 — Microphone (properly working) ───
 const micBtn = document.getElementById('mic-btn')
 let isRecording = false
 let recognition = null
 
-if ('webkitSpeechRecognition' in window) {
-  recognition = new webkitSpeechRecognition()
+function setupSpeechRecognition() {
+  const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition
+
+  if (!SpeechRecognition) {
+    console.warn('Speech recognition not supported')
+    return
+  }
+
+  recognition = new SpeechRecognition()
   recognition.continuous = false
   recognition.interimResults = true
   recognition.lang = 'en-US'
 
+  recognition.onstart = () => {
+    isRecording = true
+    micBtn?.classList.add('mic-active')
+  }
+
   recognition.onresult = (e) => {
     const transcript = Array.from(e.results)
-      .map(r => r[0].transcript).join('')
-    if (homeInput) homeInput.value = transcript
+      .map(r => r[0].transcript)
+      .join('')
+    if (homeInput) {
+      homeInput.value = transcript
+      homeInput.style.height = 'auto'
+      homeInput.style.height = homeInput.scrollHeight + 'px'
+    }
+  }
+
+  recognition.onerror = (e) => {
+    console.error('Speech error:', e.error)
+    isRecording = false
+    micBtn?.classList.remove('mic-active')
   }
 
   recognition.onend = () => {
@@ -198,16 +257,25 @@ if ('webkitSpeechRecognition' in window) {
   }
 }
 
+setupSpeechRecognition()
+
 micBtn?.addEventListener('click', () => {
-  if (!recognition) return
+  if (!recognition) {
+    setupSpeechRecognition()
+    if (!recognition) return
+  }
   if (isRecording) {
     recognition.stop()
   } else {
     recognition.start()
-    isRecording = true
-    micBtn.classList.add('mic-active')
   }
 })
 
-// ─── IPC Window Controls in main.js ───
-// Add to main.js ipcMain handlers
+// ─── Mode button icons fix ───
+// Make sure mode btn icons are white
+document.querySelectorAll('.mode-btn img').forEach(img => {
+  img.style.width = '14px'
+  img.style.height = '14px'
+  img.style.filter = 'brightness(10)'
+  img.style.opacity = '0.7'
+})

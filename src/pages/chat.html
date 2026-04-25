@@ -1,1 +1,145 @@
-ECHO is on.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mint.ai</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../chat.css">
+</head>
+<body>
+
+  <!-- Titlebar -->
+  <div class="titlebar">
+    <div class="titlebar-left">
+      <button class="icon-btn" id="btn-menu" title="Menu">
+        <img src="../assets/icons/Menu.png" alt="menu">
+      </button>
+      <button class="icon-btn sidebar-btn" id="btn-sidebar" title="Toggle Sidebar">
+        <img src="../assets/icons/Sidebar_closed.png" alt="sidebar" id="sidebar-icon">
+      </button>
+      <button class="icon-btn" id="btn-search" title="Search">
+        <img src="../assets/icons/Search.png" alt="search">
+      </button>
+    </div>
+
+    <!-- Chat name in center -->
+    <div class="chat-title-bar" id="chat-title-bar">
+      Chat Name
+    </div>
+
+    <div class="titlebar-right">
+      <button class="win-btn" id="btn-minimize">─</button>
+      <button class="win-btn" id="btn-maximize">⬜</button>
+      <button class="win-btn close" id="btn-close">✕</button>
+    </div>
+  </div>
+
+  <!-- Menu Dropdown -->
+  <div class="dropdown-menu" id="dropdown-menu">
+    <button class="dropdown-item" id="btn-settings">
+      <img src="../assets/icons/Settings.png" alt="">
+      Settings
+    </button>
+    <button class="dropdown-item" id="btn-profile">
+      <img src="../assets/icons/Profile.png" alt="">
+      Profile
+    </button>
+  </div>
+
+  <!-- Search Overlay -->
+  <div class="search-overlay" id="search-overlay">
+    <div class="search-box">
+      <div class="search-header">
+        <img src="../assets/icons/Search.png" alt="">
+        <input type="text" id="search-input" placeholder="Search chats">
+      </div>
+      <div class="search-results" id="search-results"></div>
+    </div>
+  </div>
+
+  <div class="app-layout">
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-top">
+        <button class="sidebar-action" id="new-chat-btn">
+          <img src="../assets/icons/Plus.png" alt="">
+          New chat
+        </button>
+        <button class="sidebar-action" id="projects-btn">
+          <img src="../assets/icons/Projects.png" alt="">
+          Projects
+        </button>
+      </div>
+      <div class="sidebar-section-label">Chats</div>
+      <div class="chat-history" id="chat-history"></div>
+      <div class="sidebar-profile">
+        <img src="../assets/icons/Profile.png" alt="">
+        <span>Nigesh</span>
+      </div>
+    </div>
+
+    <!-- Chat Area -->
+    <div class="main-content">
+      <div class="chat-screen">
+
+        <!-- Messages -->
+        <div class="messages-area" id="messages-area"></div>
+
+        <!-- Input Area -->
+        <div class="chat-input-section">
+
+          <!-- Mode Buttons -->
+          <div class="mode-buttons chat-modes">
+            <button class="mode-btn" data-mode="general">
+              <img src="../assets/icons/Chat.png" alt="">
+              General
+            </button>
+            <button class="mode-btn" data-mode="study">
+              <img src="../assets/icons/Study.png" alt="">
+              Study
+            </button>
+            <button class="mode-btn" data-mode="code">
+              <img src="../assets/icons/Code.png" alt="">
+              Code
+            </button>
+            <button class="mode-btn" data-mode="research">
+              <img src="../assets/icons/Research.png" alt="">
+              Research
+            </button>
+          </div>
+
+          <!-- Input Box -->
+          <div class="chat-input-wrapper">
+            <textarea
+              id="chat-input"
+              placeholder="Reply..."
+            ></textarea>
+            <div class="input-bottom-bar">
+              <button class="input-icon-btn" id="attach-btn" title="Attach">
+                <img src="../assets/icons/Plus.png" alt="attach">
+              </button>
+              <div class="input-right">
+                <span class="model-label">Llama 3.1</span>
+                <button class="input-icon-btn" id="mic-btn" title="Voice">
+                  <img src="../assets/icons/Mic.png" alt="mic">
+                </button>
+                <button class="send-btn" id="send-btn">
+                  <img src="../assets/icons/Send.png" alt="send">
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <input type="file" id="file-input"
+         accept=".pdf,.txt,.png,.jpg,.jpeg,.js,.py,.cpp,.java"
+         style="display:none">
+
+  <script src="../chat.js"></script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+ECHO is on.
+node_modules/
+.env
+dist/
+*.log
+.DS_Store
+out/

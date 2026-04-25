@@ -1,4 +1,3 @@
-ECHO is on.
 <div align="center">
 
 # Mint.ai — Your Personal Study Mentor

@@ -1,0 +1,27 @@
+{
+  "name": "mint.ai",
+  "version": "1.0.0",
+  "description": "ECHO is on.\r <div align=\"center\">",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nigeshsatheesh/Mint.ai.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/nigeshsatheesh/Mint.ai/issues"
+  },
+  "homepage": "https://github.com/nigeshsatheesh/Mint.ai#readme",
+  "devDependencies": {
+    "electron": "^41.3.0"
+  }
+}

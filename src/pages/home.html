@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mint.ai</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+  <!-- Custom Title Bar -->
+  <div class="titlebar">
+    <div class="titlebar-left">
+      <button class="icon-btn" id="btn-menu" title="Menu">
+        <img src="../assets/icons/Menu.png" alt="menu">
+      </button>
+      <button class="icon-btn sidebar-btn" id="btn-sidebar" title="Toggle Sidebar">
+        <img src="../assets/icons/Sidebar_closed.png" alt="sidebar" id="sidebar-icon">
+      </button>
+      <button class="icon-btn" id="btn-search" title="Search">
+        <img src="../assets/icons/Search.png" alt="search">
+      </button>
+    </div>
+    <div class="titlebar-right">
+      <button class="win-btn" id="btn-minimize">─</button>
+      <button class="win-btn" id="btn-maximize">□</button>
+      <button class="win-btn close" id="btn-close">✕</button>
+    </div>
+  </div>
+
+  <!-- Menu Dropdown -->
+  <div class="dropdown-menu" id="dropdown-menu">
+    <button class="dropdown-item">
+      <img src="../assets/icons/Menu.png" alt="">
+      Settings
+    </button>
+    <button class="dropdown-item">
+      <img src="../assets/icons/Menu.png" alt="">
+      Profile
+    </button>
+  </div>
+
+  <!-- Search Overlay -->
+  <div class="search-overlay" id="search-overlay">
+    <div class="search-box">
+      <div class="search-header">
+        <img src="../assets/icons/Search.png" alt="">
+        <input type="text" id="search-input" placeholder="Search chats">
+      </div>
+      <div class="search-results" id="search-results"></div>
+    </div>
+  </div>
+
+  <!-- App Layout -->
+  <div class="app-layout">
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-top">
+        <button class="sidebar-action" id="new-chat-btn">
+          <img src="../assets/icons/Plus.png" alt="">
+          New chat
+        </button>
+        <button class="sidebar-action" id="projects-btn">
+          <img src="../assets/icons/Projects.png" alt="">
+          Projects
+        </button>
+      </div>
+      <div class="sidebar-section-label">Chats</div>
+      <div class="chat-history" id="chat-history">
+        <!-- Previous chats load here -->
+      </div>
+      <div class="sidebar-profile">
+        <img src="../assets/icons/Menu.png" alt="">
+        <span>Nigesh</span>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="main-content">
+
+      <!-- Home Screen -->
+      <div class="home-screen" id="home-screen">
+        <div class="home-greeting">
+          <div class="greeting-wrapper">
+            <img class="greeting-bg" 
+                 src="../assets/images/Vector 54.png" alt="">
+            <img class="greeting-logo" 
+                 src="../assets/images/Logo_with_nobg.png" alt="">
+            <span class="greeting-text">Hello! Nigesh</span>
+          </div>
+        </div>
+
+        <!-- Chat Input Box -->
+        <div class="home-input-wrapper">
+          <textarea 
+            id="home-input"
+            placeholder="How can I help you?"
+          ></textarea>
+          <div class="input-bottom-bar">
+            <button class="input-icon-btn" id="attach-btn" title="Attach file">
+              <img src="../assets/icons/Plus.png" alt="attach">
+            </button>
+            <div class="input-right">
+              <span class="model-label">Llama 3.1</span>
+              <button class="input-icon-btn" id="mic-btn" title="Voice input">
+                <img src="../assets/icons/Mic.png" alt="mic">
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mode Buttons -->
+        <div class="mode-buttons">
+          <button class="mode-btn active" data-mode="general">
+            🔍 General
+          </button>
+          <button class="mode-btn" data-mode="study">
+            📚 Study
+          </button>
+          <button class="mode-btn" data-mode="code">
+            &lt;/&gt; Code
+          </button>
+          <button class="mode-btn" data-mode="research">
+            🔬 Research
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Hidden file input -->
+  <input type="file" id="file-input" 
+         accept=".pdf,.txt,.png,.jpg,.jpeg" 
+         style="display:none">
+
+  <script src="../app.js"></script>
+</body>
+</html>

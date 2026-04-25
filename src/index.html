@@ -1,1 +1,76 @@
-ECHO is on.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mint.ai</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="app-container">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="logo">
+        <span class="logo-icon">🌿</span>
+        <span class="logo-text">Mint.ai</span>
+      </div>
+
+      <div class="sidebar-menu">
+        <button class="menu-item active" id="btn-chat">
+          💬 Chat
+        </button>
+        <button class="menu-item" id="btn-research">
+          🔍 Research
+        </button>
+        <button class="menu-item" id="btn-code">
+          💻 Code
+        </button>
+        <button class="menu-item" id="btn-pdf">
+          📄 PDF Export
+        </button>
+      </div>
+
+      <div class="sidebar-bottom">
+        <div class="model-status">
+          <span class="status-dot"></span>
+          <span>Llama 3.1 — Ready</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Chat Area -->
+    <div class="main-area">
+
+      <!-- Top Bar -->
+      <div class="topbar">
+        <h2 class="topbar-title">Study Chat</h2>
+        <button class="clear-btn" id="btn-clear">🗑 Clear Chat</button>
+      </div>
+
+      <!-- Messages -->
+      <div class="messages-container" id="messages">
+        <div class="welcome-message">
+          <h1>👋 Hey Nigesh!</h1>
+          <p>I'm Mint.ai — your personal study mentor.</p>
+          <p>Ask me anything. I'll explain, code, research, and guide you.</p>
+        </div>
+      </div>
+
+      <!-- Input Area -->
+      <div class="input-area">
+        <textarea 
+          id="user-input" 
+          placeholder="Ask me anything... (Shift+Enter for new line, Enter to send)"
+          rows="1"
+        ></textarea>
+        <button id="send-btn">Send ➤</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

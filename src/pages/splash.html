@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mint.ai</title>
+  <style>
+    @font-face {
+      font-family: 'CalSans';
+      src: url('../assets/Cal_sans/CalSans-SemiBold.woff2') format('woff2'),
+           url('../assets/Cal_sans/CalSans-SemiBold.ttf') format('truetype');
+      font-weight: 600;
+    }
+
+    @font-face {
+      font-family: 'FunnelSans';
+      src: url('../assets/Funnel_sans/FunnelSans-Regular.ttf') format('truetype');
+      font-weight: 400;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #151F1B;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      -webkit-app-region: drag;
+    }
+
+    .splash-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.8s ease forwards;
+    }
+
+    .logo-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    .bg-vector {
+      position: absolute;
+      width: 320px;
+      opacity: 0.85;
+    }
+
+    .mint-logo {
+      position: relative;
+      width: 180px;
+      z-index: 2;
+      animation: floatLogo 3s ease-in-out infinite;
+    }
+
+    .brand-name {
+      font-family: 'CalSans', sans-serif;
+      font-size: 52px;
+      color: #FFFFFF;
+      letter-spacing: -1px;
+      margin-bottom: 8px;
+    }
+
+    .brand-tagline {
+      font-family: 'FunnelSans', sans-serif;
+      font-size: 16px;
+      color: #3D725E;
+      font-style: italic;
+      letter-spacing: 0.5px;
+    }
+
+    .loading-bar {
+      margin-top: 48px;
+      width: 180px;
+      height: 2px;
+      background: #1F2E27;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .loading-fill {
+      height: 100%;
+      background: #35F3A8;
+      border-radius: 2px;
+      animation: loadFill 2.8s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes floatLogo {
+      0%, 100% { transform: translateY(0px); }
+      50%       { transform: translateY(-8px); }
+    }
+
+    @keyframes loadFill {
+      from { width: 0%; }
+      to   { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="splash-container">
+    <div class="logo-wrapper">
+      <img class="bg-vector" src="../assets/images/Vector 54.png" alt="">
+      <img class="mint-logo" src="../assets/images/Logo_with_nobg.png" alt="Mint.ai">
+    </div>
+    <div class="brand-name">Mint.ai</div>
+    <div class="brand-tagline">"Your Minting Mentor"</div>
+    <div class="loading-bar">
+      <div class="loading-fill"></div>
+    </div>
+  </div>
+</body>
+</html>

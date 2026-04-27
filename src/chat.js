@@ -31,13 +31,18 @@ const sidebar = document.getElementById('sidebar')
 const sidebarIcon = document.getElementById('sidebar-icon')
 let sidebarOpen = false
 
-sidebarBtn?.addEventListener('click', () => {
+sidebarBtn?.addEventListener('click', function () {
   sidebarOpen = !sidebarOpen
+
+  this.classList.toggle('active', sidebarOpen)
+
   sidebar.classList.toggle('open', sidebarOpen)
   sidebarBtn.classList.toggle('open', sidebarOpen)
+
   sidebarIcon.src = sidebarOpen
     ? '../assets/icons/Sidebar_opened.png'
     : '../assets/icons/Sidebar_closed.png'
+
   loadChatHistory()
 })
 

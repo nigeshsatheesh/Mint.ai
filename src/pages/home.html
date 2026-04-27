@@ -5,37 +5,390 @@
   <title>Mint.ai</title>
   <link rel="stylesheet" href="../style.css">
   <style>
-    /* Page bg fix — issue 7 */
-    body { background: #262626; }
-
-    /* Greeting size fix — issue 2+3 */
-    .greeting-logo { width: 72px !important; }
-    .greeting-text {
-      font-size: 52px !important;
-      font-family: 'CalSans', sans-serif !important;
+    @font-face {
+      font-family: 'CalSans';
+      src: url('../assets/fonts/Cal_sans/CalSans-SemiBold.woff2') format('woff2'),
+           url('../assets/fonts/Cal_sans/CalSans-SemiBold.ttf') format('truetype');
+    }
+    @font-face {
+      font-family: 'Gabarito';
+      src: url('../assets/fonts/Gabarito/Gabarito-Regular.woff2') format('woff2'),
+           url('../assets/fonts/Gabarito/Gabarito-Regular.ttf') format('truetype');
+      font-weight: 400;
+    }
+    @font-face {
+      font-family: 'Funnel Sans';
+      src: url('../assets/fonts/Funnel_sans/FunnelSans-Italic.ttf') format('truetype');
+      font-weight: 400;
     }
 
-    /* Greeting bg cover sized to Hello Nigesh text — issue 2 */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #1e1e1e;
+      color: #fff;
+      font-family: 'Gabarito', sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── TITLEBAR ── */
+    .titlebar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 48px;
+      padding: 0 12px;
+      background: #1e1e1e;
+      flex-shrink: 0;
+      -webkit-app-region: drag;
+    }
+    .titlebar-left,
+    .titlebar-right {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      -webkit-app-region: no-drag;
+    }
+    .icon-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px 8px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+    }
+    .icon-btn:hover { background: rgba(255,255,255,0.07); }
+    .icon-btn img { width: 20px; height: 20px; object-fit: contain; }
+
+    .win-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      width: 46px;
+      height: 32px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #aaa;
+      font-size: 14px;
+      transition: background 0.15s;
+    }
+    .win-btn:hover { background: rgba(255,255,255,0.08); }
+    .win-btn.close:hover { background: #c0392b; color: #fff; }
+    .win-btn img { width: 14px; height: 14px; object-fit: contain; }
+
+    /* ── APP LAYOUT ── */
+    .app-layout {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: 240px;
+      background: #1e1e1e;
+      display: flex;
+      flex-direction: column;
+      padding: 12px 10px;
+      gap: 6px;
+      border-right: 1px solid rgba(255,255,255,0.05);
+      transition: width 0.25s ease, opacity 0.25s ease;
+      overflow: hidden;
+    }
+    .sidebar.hidden { width: 0; opacity: 0; padding: 0; }
+
+    .sidebar-top { display: flex; flex-direction: column; gap: 4px; }
+    .sidebar-action {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: none;
+      border: none;
+      color: #ccc;
+      font-size: 14px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+    .sidebar-action:hover { background: rgba(255,255,255,0.07); }
+    .sidebar-action img { width: 18px; height: 18px; object-fit: contain; }
+
+    .sidebar-section-label {
+      font-size: 11px;
+      color: #555;
+      padding: 8px 10px 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .chat-history { flex: 1; overflow-y: auto; }
+    .sidebar-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      color: #ccc;
+      font-size: 14px;
+    }
+    .sidebar-profile img { width: 24px; height: 24px; border-radius: 50%; }
+
+    /* ── MAIN CONTENT ── */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: #262626;
+    }
+
+    /* ── HOME SCREEN ── */
+    .home-screen {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      padding: 40px 20px;
+    }
+
+    /* ── GREETING ── */
+    .home-greeting {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .greeting-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    /* Brush stroke background */
     .greeting-bg {
-      width: 680px !important;
-      height: 110px !important;
-      object-fit: fill !important;
-      opacity: 0.75 !important;
-      top: 50% !important;
-      left: 50% !important;
-      transform: translate(-50%, -50%) !important;
-      position: absolute !important;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 720px;
+      height: 110px;
+      object-fit: fill;
+      opacity: 0.75;
+      z-index: 0;
     }
 
-    /* Maximize button size fix — issue 5 */
-    .win-btn { 
-      width: 40px !important; 
-      height: 32px !important;
-      font-size: 15px !important;
+    .greeting-logo {
+      width: 200px;
+      height: auto;
+      position: relative;
+      z-index: 1;
+      flex-shrink: 0;
     }
 
-    /* AI response bg color — issue 7 */
-    .ai-bubble { background: #2B3C36 !important; }
+    .greeting-text-group {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 1;
+      right: 60px;
+    }
+
+    .greeting-text {
+      font-family: 'Gabarito', sans-serif;
+      font-size: 64px;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .greeting-slogan {
+      font-family: 'Funnel Sans', sans-serif;
+      font-size: 13px;
+      color: #22D3A8;
+      margin-top: 4px;
+      padding-left: 2px;
+    }
+
+    /* ── INPUT WRAPPER ── */
+    .home-input-wrapper {
+      width: 100%;
+      max-width: 760px;
+      background: #2e2e2e;
+      border-radius: 16px;
+      padding: 18px 18px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    #home-input {
+      background: none;
+      border: none;
+      outline: none;
+      color: #aaa;
+      font-size: 15px;
+      font-family: 'Gabarito', sans-serif;
+      resize: none;
+      min-height: 90px;
+      width: 100%;
+    }
+    #home-input::placeholder { color: #555; }
+
+    .input-bottom-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .input-icon-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #aaa;
+      font-size: 20px;
+      transition: background 0.15s;
+    }
+    .input-icon-btn:hover { background: rgba(255,255,255,0.07); }
+    .input-icon-btn img { width: 20px; height: 20px; object-fit: contain; }
+
+    .input-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .model-label {
+      font-size: 14px;
+      color: #aaa;
+      font-family: 'Gabarito', sans-serif;
+    }
+
+    /* ── MODE BUTTONS ── */
+    .mode-buttons {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .mode-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: none;
+      border: 1.5px solid #22D3A8;
+      color: #22D3A8;
+      font-size: 13px;
+      font-family: 'Gabarito', sans-serif;
+      padding: 6px 16px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+    .mode-btn img { width: 16px; height: 16px; object-fit: contain; }
+    .mode-btn:hover,
+    .mode-btn.active {
+      background: #22D3A8;
+      color: #1e1e1e;
+    }
+
+    /* ── DROPDOWN MENU ── */
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 48px;
+      left: 12px;
+      background: #2a2a2a;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 6px;
+      z-index: 100;
+      min-width: 160px;
+    }
+    .dropdown-menu.open { display: block; }
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: none;
+      border: none;
+      color: #ccc;
+      font-size: 14px;
+      padding: 8px 12px;
+      border-radius: 7px;
+      width: 100%;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .dropdown-item:hover { background: rgba(255,255,255,0.07); }
+    .dropdown-item img { width: 18px; height: 18px; object-fit: contain; }
+
+    /* ── SEARCH OVERLAY ── */
+    .search-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 200;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 80px;
+    }
+    .search-overlay.open { display: flex; }
+    .search-box {
+      background: #2a2a2a;
+      border-radius: 12px;
+      width: 500px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .search-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .search-header img { width: 18px; height: 18px; opacity: 0.5; }
+    #search-input {
+      background: none;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-size: 15px;
+      flex: 1;
+    }
+    .search-results { padding: 8px; min-height: 40px; }
+    /* Sidebar icon — grey by default */
+    #sidebar-icon {
+      filter: grayscale(100%) brightness(0.6);
+      transition: filter 0.2s;
+    }
+
+    /* Sidebar icon — teal when sidebar is open */
+    .sidebar-btn.active #sidebar-icon {
+      filter: none;
+    }
   </style>
 </head>
 <body>
@@ -55,12 +408,12 @@
     </div>
     <div class="titlebar-right">
       <button class="win-btn" id="btn-minimize">─</button>
-      <button class="win-btn" id="btn-maximize">⬜</button>
+      <button class="win-btn" id="btn-maximize">◻</button>
       <button class="win-btn close" id="btn-close">✕</button>
     </div>
   </div>
 
-  <!-- Menu Dropdown — Fix 8 -->
+  <!-- Menu Dropdown -->
   <div class="dropdown-menu" id="dropdown-menu">
     <button class="dropdown-item" id="btn-settings">
       <img src="../assets/icons/Settings.png" alt="">
@@ -109,23 +462,21 @@
     <div class="main-content" id="main-content">
       <div class="home-screen" id="home-screen">
 
-        <!-- Greeting — Fix 2+3 -->
+        <!-- Greeting -->
         <div class="home-greeting">
           <div class="greeting-wrapper">
-            <img class="greeting-bg"
-                 src="../assets/images/Vector 54.png" alt="">
-            <img class="greeting-logo"
-                 src="../assets/images/Logo_with_nobg.png" alt="">
-            <span class="greeting-text">Hello! Nigesh</span>
+            <img class="greeting-bg" src="../assets/images/Vector 54.png" alt="">
+            <img class="greeting-logo" src="../assets/images/Logo_with_nobg.png" alt="">
+            <div class="greeting-text-group">
+              <span class="greeting-text">Hello! Nigesh</span>
+              <span class="greeting-slogan">"Lets mint Together"</span>
+            </div>
           </div>
         </div>
 
         <!-- Input Box -->
         <div class="home-input-wrapper">
-          <textarea
-            id="home-input"
-            placeholder="How can I help you?"
-          ></textarea>
+          <textarea id="home-input" placeholder="What we gonna mint today?"></textarea>
           <div class="input-bottom-bar">
             <button class="input-icon-btn" id="attach-btn" title="Attach file">
               <img src="../assets/icons/Plus.png" alt="attach">
@@ -139,7 +490,7 @@
           </div>
         </div>
 
-        <!-- Mode Buttons — Fix 6 -->
+        <!-- Mode Buttons -->
         <div class="mode-buttons">
           <button class="mode-btn active" data-mode="general">
             <img src="../assets/icons/Chat.png" alt="">
@@ -163,7 +514,7 @@
     </div>
   </div>
 
-  <!-- Hidden file input — Fix 11 -->
+  <!-- Hidden file input -->
   <input type="file" id="file-input"
          accept=".pdf,.txt,.png,.jpg,.jpeg,.js,.py,.cpp,.java"
          style="display:none">

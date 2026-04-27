@@ -17,12 +17,6 @@ function createSplash() {
     }
   })
   splashWindow.loadFile('src/pages/splash.html')
-
-  // After 3 seconds, close splash and open main
-  setTimeout(() => {
-    createMain()
-    splashWindow.close()
-  }, 3000)
 }
 
 function createMain() {
@@ -60,6 +54,11 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit()
 })
 const { ipcMain } = require('electron')
+
+ipcMain.on('splash-complete', () => {
+  createMain()
+  splashWindow?.close()
+})
 
 ipcMain.on('minimize', () => mainWindow.minimize())
 ipcMain.on('maximize', () => {

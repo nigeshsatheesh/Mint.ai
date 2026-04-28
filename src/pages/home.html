@@ -5,406 +5,101 @@
   <title>Mint.ai</title>
   <link rel="stylesheet" href="../style.css">
   <style>
-    @font-face {
-      font-family: 'CalSans';
-      src: url('../assets/fonts/Cal_sans/CalSans-SemiBold.woff2') format('woff2'),
-           url('../assets/fonts/Cal_sans/CalSans-SemiBold.ttf') format('truetype');
-    }
-    @font-face {
-      font-family: 'Gabarito';
-      src: url('../assets/fonts/Gabarito/Gabarito-Regular.woff2') format('woff2'),
-           url('../assets/fonts/Gabarito/Gabarito-Regular.ttf') format('truetype');
-      font-weight: 400;
-    }
-    @font-face {
-      font-family: 'Funnel Sans';
-      src: url('../assets/fonts/Funnel_sans/FunnelSans-Italic.ttf') format('truetype');
-      font-weight: 400;
-    }
+    @font-face { font-family: 'Gabarito_Regular'; src: url('../assets/fonts/Gabarito/Gabarito-Regular.ttf') format('truetype'); font-weight: 400; }
+    @font-face { font-family: 'Funnel Sans'; src: url('../assets/fonts/Funnel_sans/FunnelSans-Italic.ttf') format('truetype'); font-weight: 400; }
+    @font-face { font-family: 'MADEOkineSans'; src: url('../assets/fonts/MADEOkineSans/MADEOkineSansPERSONALUSE-Medium.otf') format('opentype'); font-weight: 500; }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #1e1e1e; color: #fff; font-family: 'Gabarito_Regular', sans-serif; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
 
-    body {
-      background: #1e1e1e;
-      color: #fff;
-      font-family: 'Gabarito', sans-serif;
-      height: 100vh;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* ── TITLEBAR ── */
-    .titlebar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 48px;
-      padding: 0 12px;
-      background: #1e1e1e;
-      flex-shrink: 0;
-      -webkit-app-region: drag;
-    }
-    .titlebar-left,
-    .titlebar-right {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      -webkit-app-region: no-drag;
-    }
-    .icon-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 6px 8px;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.15s;
-    }
+    .titlebar { display: flex; align-items: center; justify-content: space-between; height: 48px; padding: 0 12px; background: #1e1e1e; flex-shrink: 0; -webkit-app-region: drag; }
+    .titlebar-left, .titlebar-right { display: flex; align-items: center; gap: 4px; -webkit-app-region: no-drag; }
+    .icon-btn { background: none; border: none; cursor: pointer; padding: 6px 8px; border-radius: 6px; display: flex; align-items: center; justify-content: center; transition: background 0.15s; }
     .icon-btn:hover { background: rgba(255,255,255,0.07); }
     .icon-btn img { width: 20px; height: 20px; object-fit: contain; }
-
-    .win-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      width: 46px;
-      height: 32px;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #aaa;
-      font-size: 14px;
-      transition: background 0.15s;
-    }
+    .win-btn { background: none; border: none; cursor: pointer; width: 46px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #aaa; font-size: 14px; transition: background 0.15s; }
     .win-btn:hover { background: rgba(255,255,255,0.08); }
     .win-btn.close:hover { background: #c0392b; color: #fff; }
     .win-btn img { width: 14px; height: 14px; object-fit: contain; }
 
-    /* ── APP LAYOUT ── */
-    .app-layout {
-      display: flex;
-      flex: 1;
-      overflow: hidden;
-    }
+    .app-layout { display: flex; flex: 1; overflow: hidden; }
 
-    /* ── SIDEBAR ── */
-    .sidebar {
-      width: 240px;
-      background: #1e1e1e;
-      display: flex;
-      flex-direction: column;
-      padding: 12px 10px;
-      gap: 6px;
-      border-right: 1px solid rgba(255,255,255,0.05);
-      transition: width 0.25s ease, opacity 0.25s ease;
-      overflow: hidden;
-    }
-    .sidebar.hidden { width: 0; opacity: 0; padding: 0; }
-
-    .sidebar-top { display: flex; flex-direction: column; gap: 4px; }
-    .sidebar-action {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: none;
-      border: none;
-      color: #ccc;
-      font-size: 14px;
-      padding: 8px 10px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.15s;
-      white-space: nowrap;
-    }
+    /* SIDEBAR */
+    .sidebar { width: 0; opacity: 0; background: #1e1e1e; display: flex; flex-direction: column; padding: 0; border-right: 1px solid rgba(255,255,255,0.05); transition: width 0.25s ease, opacity 0.25s ease, padding 0.25s ease; overflow: hidden; }
+    .sidebar.open { width: 240px; opacity: 1; padding: 12px 10px; }
+    .sidebar-top { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+    .sidebar-action { display: flex; align-items: center; gap: 10px; background: none; border: none; color: #ccc; font-size: 14px; padding: 8px 10px; border-radius: 8px; cursor: pointer; transition: background 0.15s; white-space: nowrap; }
     .sidebar-action:hover { background: rgba(255,255,255,0.07); }
     .sidebar-action img { width: 18px; height: 18px; object-fit: contain; }
 
-    .sidebar-section-label {
-      font-size: 11px;
-      color: #555;
-      padding: 8px 10px 2px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-    .chat-history { flex: 1; overflow-y: auto; }
-    .sidebar-profile {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px;
-      border-top: 1px solid rgba(255,255,255,0.05);
-      color: #ccc;
-      font-size: 14px;
-    }
-    .sidebar-profile img { width: 24px; height: 24px; border-radius: 50%; }
+    /* Chat history card — Figma design */
+    .chat-history-wrapper { flex: 1; display: flex; flex-direction: column; background: #2B3C36; border: none; border-radius: 12px; overflow: hidden; min-height: 0; }
+    .sidebar-section-label { font-size: 14px; font-family: 'Gabarito_Regular', sans-serif; color: #ffffff; padding: 10px 14px 6px; font-weight: 600; flex-shrink: 0; }
+    .chat-history { flex: 1; overflow-y: auto; display: flex; flex-direction: column; padding: 4px 0; scrollbar-width: thin; scrollbar-color: #35F3A8 transparent; }
+    .chat-history::-webkit-scrollbar { width: 5px; }
+    .chat-history::-webkit-scrollbar-track { background: transparent; }
+    .chat-history::-webkit-scrollbar-thumb { background: #35F3A8; border-radius: 999px; }
+    .chat-history-item { display: flex; align-items: center; font-size: 14px; font-family: 'Gabarito_Regular', sans-serif; color: #40BA8B; padding: 9px 14px; cursor: pointer; transition: background 0.15s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .chat-history-item img { display: none; }
+    .chat-history-item.active { background: rgba(64,186,139,0.15); color: #ffffff; }
+    .chat-history-item:hover:not(.active) { background: rgba(64,186,139,0.08); }
 
-    /* ── MAIN CONTENT ── */
-    .main-content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      background: #262626;
-    }
+    .sidebar-profile { display: flex; align-items: center; gap: 10px; padding: 10px; border-top: 1px solid rgba(255,255,255,0.05); color: #ccc; font-size: 14px; flex-shrink: 0; margin-top: 8px; }
+    .sidebar-profile img { width: 18px; height: 30px; border-radius: 50%; }
 
-    /* ── HOME SCREEN ── */
-    .home-screen {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 32px;
-      padding: 40px 20px;
-    }
+    #sidebar-icon { transition: filter 0.2s; }
+    .sidebar-btn.active #sidebar-icon { filter: none; }
 
-    /* ── GREETING ── */
-    .home-greeting {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+    /* MAIN */
+    .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #262626; }
+    .home-screen { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 32px; padding: 40px 20px; }
 
-    .greeting-wrapper {
-      position: relative;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
+    .home-greeting { display: flex; align-items: center; justify-content: center; }
+    .greeting-wrapper { position: relative; display: flex; align-items: center; gap: 16px; }
+    .greeting-bg { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 720px; height: 110px; object-fit: fill; opacity: 0.75; z-index: 0; }
+    .greeting-logo { width: 200px; height: auto; position: relative; z-index: 1; flex-shrink: 0; }
+    .greeting-text-group { display: flex; flex-direction: column; position: relative; z-index: 1; right: 60px; }
+    .greeting-text { font-family: 'MADEOkineSans', sans-serif; font-size: 64px; font-weight: 500; color: #ffffff; line-height: 1; white-space: nowrap; }
+    .greeting-slogan { font-family: 'Funnel Sans', sans-serif; font-size: 13px; color: #22D3A8; margin-top: 4px; padding-left: 130px; }
 
-    /* Brush stroke background */
-    .greeting-bg {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 720px;
-      height: 110px;
-      object-fit: fill;
-      opacity: 0.75;
-      z-index: 0;
-    }
-
-    .greeting-logo {
-      width: 200px;
-      height: auto;
-      position: relative;
-      z-index: 1;
-      flex-shrink: 0;
-    }
-
-    .greeting-text-group {
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      z-index: 1;
-      right: 60px;
-    }
-
-    .greeting-text {
-      font-family: 'Gabarito', sans-serif;
-      font-size: 64px;
-      font-weight: 700;
-      color: #ffffff;
-      line-height: 1;
-      white-space: nowrap;
-    }
-
-    .greeting-slogan {
-      font-family: 'Funnel Sans', sans-serif;
-      font-size: 13px;
-      color: #22D3A8;
-      margin-top: 4px;
-      padding-left: 2px;
-    }
-
-    /* ── INPUT WRAPPER ── */
-    .home-input-wrapper {
-      width: 100%;
-      max-width: 760px;
-      background: #2e2e2e;
-      border-radius: 16px;
-      padding: 18px 18px 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      border: 1px solid rgba(255,255,255,0.06);
-    }
-
-    #home-input {
-      background: none;
-      border: none;
-      outline: none;
-      color: #aaa;
-      font-size: 15px;
-      font-family: 'Gabarito', sans-serif;
-      resize: none;
-      min-height: 90px;
-      width: 100%;
-    }
+    .home-input-wrapper { width: 100%; max-width: 760px; background: #2e2e2e; border-radius: 16px; padding: 18px 18px 14px; display: flex; flex-direction: column; gap: 12px; border: 1px solid rgba(255,255,255,0.06); }
+    #home-input { background: none; border: none; outline: none; color: #aaa; font-size: 15px; font-family: 'Gabarito_Regular', sans-serif; resize: none; min-height: 90px; width: 100%; }
     #home-input::placeholder { color: #555; }
 
-    .input-bottom-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .input-icon-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 6px;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #aaa;
-      font-size: 20px;
-      transition: background 0.15s;
-    }
+    .input-bottom-bar { display: flex; align-items: center; justify-content: space-between; }
+    .input-icon-btn { background: none; border: none; cursor: pointer; padding: 6px; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #aaa; font-size: 20px; transition: background 0.15s; }
     .input-icon-btn:hover { background: rgba(255,255,255,0.07); }
     .input-icon-btn img { width: 20px; height: 20px; object-fit: contain; }
+    .input-right { display: flex; align-items: center; gap: 12px; }
+    .model-label { font-size: 14px; color: #aaa; font-family: 'Gabarito_Regular', sans-serif; }
 
-    .input-right {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+    .mode-buttons { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center; }
+    .mode-btn { display: flex; align-items: center; gap: 6px; background: #2B3C36; border: none; color: #40BA8B; font-size: 13px; font-family: 'Gabarito_Regular', sans-serif; padding: 6px 16px; border-radius: 999px; cursor: pointer; transition: background 0.15s, color 0.15s; }
+    .mode-btn img { width: 16px; height: 16px; object-fit: contain; filter: brightness(0) saturate(100%) invert(66%) sepia(28%) saturate(353%) hue-rotate(127deg) brightness(97%) contrast(92%); }
+    .mode-btn:hover, .mode-btn.active { background: #40BA8B; color: #2B3C36; }
+    .mode-btn:hover img, .mode-btn.active img { filter: brightness(0) saturate(100%) invert(11%) sepia(21%) saturate(1340%) hue-rotate(115deg) brightness(98%) contrast(95%); }
 
-    .model-label {
-      font-size: 14px;
-      color: #aaa;
-      font-family: 'Gabarito', sans-serif;
-    }
-
-    /* ── MODE BUTTONS ── */
-    .mode-buttons {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .mode-btn {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: none;
-      border: 1.5px solid #22D3A8;
-      color: #22D3A8;
-      font-size: 13px;
-      font-family: 'Gabarito', sans-serif;
-      padding: 6px 16px;
-      border-radius: 999px;
-      cursor: pointer;
-      transition: background 0.15s, color 0.15s;
-    }
-    .mode-btn img { width: 16px; height: 16px; object-fit: contain; }
-    .mode-btn:hover,
-    .mode-btn.active {
-      background: #22D3A8;
-      color: #1e1e1e;
-    }
-
-    /* ── DROPDOWN MENU ── */
-    .dropdown-menu {
-      display: none;
-      position: absolute;
-      top: 48px;
-      left: 12px;
-      background: #2a2a2a;
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 10px;
-      padding: 6px;
-      z-index: 100;
-      min-width: 160px;
-    }
+    .dropdown-menu { display: none; position: absolute; top: 48px; left: 12px; background: #2a2a2a; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 6px; z-index: 100; min-width: 160px; }
     .dropdown-menu.open { display: block; }
-    .dropdown-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: none;
-      border: none;
-      color: #ccc;
-      font-size: 14px;
-      padding: 8px 12px;
-      border-radius: 7px;
-      width: 100%;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
+    .dropdown-item { display: flex; align-items: center; gap: 10px; background: none; border: none; color: #ccc; font-size: 14px; padding: 8px 12px; border-radius: 7px; width: 100%; cursor: pointer; transition: background 0.15s; }
     .dropdown-item:hover { background: rgba(255,255,255,0.07); }
     .dropdown-item img { width: 18px; height: 18px; object-fit: contain; }
 
-    /* ── SEARCH OVERLAY ── */
-    .search-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.5);
-      z-index: 200;
-      align-items: flex-start;
-      justify-content: center;
-      padding-top: 80px;
-    }
+    .search-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; align-items: flex-start; justify-content: center; padding-top: 80px; }
     .search-overlay.open { display: flex; }
-    .search-box {
-      background: #2a2a2a;
-      border-radius: 12px;
-      width: 500px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-    .search-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 14px 16px;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-    }
+    .search-box { background: #2a2a2a; border-radius: 12px; width: 500px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); }
+    .search-header { display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.06); }
     .search-header img { width: 18px; height: 18px; opacity: 0.5; }
-    #search-input {
-      background: none;
-      border: none;
-      outline: none;
-      color: #fff;
-      font-size: 15px;
-      flex: 1;
-    }
+    #search-input { background: none; border: none; outline: none; color: #fff; font-size: 15px; flex: 1; }
     .search-results { padding: 8px; min-height: 40px; }
-    /* Sidebar icon — grey by default */
-    #sidebar-icon {
-      filter: grayscale(100%) brightness(0.6);
-      transition: filter 0.2s;
-    }
-
-    /* Sidebar icon — teal when sidebar is open */
-    .sidebar-btn.active #sidebar-icon {
-      filter: none;
-    }
   </style>
 </head>
 <body>
-
-  <!-- Titlebar -->
   <div class="titlebar">
     <div class="titlebar-left">
-      <button class="icon-btn" id="btn-menu" title="Menu">
-        <img src="../assets/icons/Menu.png" alt="menu">
-      </button>
-      <button class="icon-btn sidebar-btn" id="btn-sidebar" title="Toggle Sidebar">
-        <img src="../assets/icons/Sidebar_closed.png" alt="sidebar" id="sidebar-icon">
-      </button>
-      <button class="icon-btn" id="btn-search" title="Search">
-        <img src="../assets/icons/Search.png" alt="search">
-      </button>
+      <button class="icon-btn" id="btn-menu"><img src="../assets/icons/Menu.png" alt="menu"></button>
+      <button class="icon-btn sidebar-btn" id="btn-sidebar"><img src="../assets/icons/Sidebar_closed.png" alt="sidebar" id="sidebar-icon"></button>
+      <button class="icon-btn" id="btn-search"><img src="../assets/icons/Search.png" alt="search"></button>
     </div>
     <div class="titlebar-right">
       <button class="win-btn" id="btn-minimize">─</button>
@@ -413,112 +108,67 @@
     </div>
   </div>
 
-  <!-- Menu Dropdown -->
   <div class="dropdown-menu" id="dropdown-menu">
-    <button class="dropdown-item" id="btn-settings">
-      <img src="../assets/icons/Settings.png" alt="">
-      Settings
-    </button>
-    <button class="dropdown-item" id="btn-profile">
-      <img src="../assets/icons/Profile.png" alt="">
-      Profile
-    </button>
+    <button class="dropdown-item" id="btn-settings"><img src="../assets/icons/Settings.png" alt="">Settings</button>
+    <button class="dropdown-item" id="btn-profile"><img src="../assets/icons/Profile.png" alt="">Profile</button>
   </div>
 
-  <!-- Search Overlay -->
   <div class="search-overlay" id="search-overlay">
     <div class="search-box">
-      <div class="search-header">
-        <img src="../assets/icons/Search.png" alt="">
-        <input type="text" id="search-input" placeholder="Search chats">
-      </div>
+      <div class="search-header"><img src="../assets/icons/Search.png" alt=""><input type="text" id="search-input" placeholder="Search chats"></div>
       <div class="search-results" id="search-results"></div>
     </div>
   </div>
 
   <div class="app-layout">
-
-    <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
       <div class="sidebar-top">
-        <button class="sidebar-action" id="new-chat-btn">
-          <img src="../assets/icons/Plus.png" alt="">
-          New chat
-        </button>
-        <button class="sidebar-action" id="projects-btn">
-          <img src="../assets/icons/Projects.png" alt="">
-          Projects
-        </button>
+        <button class="sidebar-action" id="new-chat-btn"><img src="../assets/icons/Plus.png" alt="">New chat</button>
+        <button class="sidebar-action" id="projects-btn"><img src="../assets/icons/Projects.png" alt="">Projects</button>
       </div>
-      <div class="sidebar-section-label">Chats</div>
-      <div class="chat-history" id="chat-history"></div>
+      <div class="chat-history-wrapper">
+        <div class="sidebar-section-label">Chats</div>
+        <div class="chat-history" id="chat-history"></div>
+      </div>
       <div class="sidebar-profile">
         <img src="../assets/icons/Profile.png" alt="">
         <span>Nigesh</span>
       </div>
     </div>
 
-    <!-- Main -->
     <div class="main-content" id="main-content">
       <div class="home-screen" id="home-screen">
-
-        <!-- Greeting -->
         <div class="home-greeting">
           <div class="greeting-wrapper">
             <img class="greeting-bg" src="../assets/images/Vector 54.png" alt="">
             <img class="greeting-logo" src="../assets/images/Logo_with_nobg.png" alt="">
             <div class="greeting-text-group">
               <span class="greeting-text">Hello! Nigesh</span>
-              <span class="greeting-slogan">"Lets mint Together"</span>
+              <span class="greeting-slogan">"Let's Mint Together"</span>
             </div>
           </div>
         </div>
-
-        <!-- Input Box -->
         <div class="home-input-wrapper">
           <textarea id="home-input" placeholder="What we gonna mint today?"></textarea>
           <div class="input-bottom-bar">
-            <button class="input-icon-btn" id="attach-btn" title="Attach file">
-              <img src="../assets/icons/Plus.png" alt="attach">
-            </button>
+            <button class="input-icon-btn" id="attach-btn"><img src="../assets/icons/Plus.png" alt="attach"></button>
             <div class="input-right">
               <span class="model-label">Llama 3.1</span>
-              <button class="input-icon-btn" id="mic-btn" title="Voice input">
-                <img src="../assets/icons/Mic.png" alt="mic">
-              </button>
+              <button class="input-icon-btn" id="mic-btn"><img src="../assets/icons/Mic.png" alt="mic"></button>
             </div>
           </div>
         </div>
-
-        <!-- Mode Buttons -->
         <div class="mode-buttons">
-          <button class="mode-btn active" data-mode="general">
-            <img src="../assets/icons/Chat.png" alt="">
-            General
-          </button>
-          <button class="mode-btn" data-mode="study">
-            <img src="../assets/icons/Study.png" alt="">
-            Study
-          </button>
-          <button class="mode-btn" data-mode="code">
-            <img src="../assets/icons/Code.png" alt="">
-            Code
-          </button>
-          <button class="mode-btn" data-mode="research">
-            <img src="../assets/icons/Research.png" alt="">
-            Research
-          </button>
+          <button class="mode-btn" data-mode="general"><img src="../assets/icons/Chat.png" alt="">General</button>
+          <button class="mode-btn" data-mode="study"><img src="../assets/icons/Study.png" alt="">Study</button>
+          <button class="mode-btn" data-mode="code"><img src="../assets/icons/Code.png" alt="">Code</button>
+          <button class="mode-btn" data-mode="research"><img src="../assets/icons/Research.png" alt="">Research</button>
         </div>
-
       </div>
     </div>
   </div>
 
-  <!-- Hidden file input -->
-  <input type="file" id="file-input"
-         accept=".pdf,.txt,.png,.jpg,.jpeg,.js,.py,.cpp,.java"
-         style="display:none">
-
+  <input type="file" id="file-input" accept=".pdf,.txt,.png,.jpg,.jpeg,.js,.py,.cpp,.java" style="display:none">
   <script src="../app.js"></script>
 </body>
 </html>

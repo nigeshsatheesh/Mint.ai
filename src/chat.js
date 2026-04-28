@@ -185,7 +185,8 @@ Cite concepts clearly and explain thoroughly.`
 const messagesArea = document.getElementById('messages-area')
 let chatHistory = []
 
-function renderMessage(role, content) {
+function renderMessage(role, content, mode) {
+  const snapMode = mode || currentMode   // ← snapshot passed in or current
   if (role === 'user') {
     const block = document.createElement('div')
     block.className = 'message-block user-message'
@@ -203,13 +204,23 @@ function renderMessage(role, content) {
       </div>`
     messagesArea.appendChild(block)
   } else {
+    const modeIcons = {
+      general:  '../assets/icons/Chat.png',
+      study:    '../assets/icons/Study.png',
+      code:     '../assets/icons/Code.png',
+      research: '../assets/icons/Research.png'
+    }
+    const modePill = `
+      <div class="ai-mode-pill">
+        <img src="../assets/images/Logo_with_nobg.png" alt="" class="ai-leaf-icon">
+        <span class="ai-mode-badge">
+          <img src="${modeIcons[snapMode]}" alt="">
+          ${snapMode.charAt(0).toUpperCase() + snapMode.slice(1)}
+        </span>
+      </div>`
     const block = document.createElement('div')
     block.className = 'message-block ai-message'
-    block.innerHTML = `
-      <div class="ai-avatar">
-        <img src="../assets/images/Logo_with_nobg.png" alt="Mint.ai">
-      </div>
-      <div class="ai-bubble">${formatAIResponse(content)}</div>`
+    block.innerHTML = `<div class="ai-bubble">${modePill}${formatAIResponse(content)}</div>`
     messagesArea.appendChild(block)
   }
   scrollToBottom()
@@ -403,9 +414,18 @@ async function sendToAI(userMessage) {
   const sendBtn = document.getElementById('send-btn')
   if (sendBtn) sendBtn.disabled = true
 
+  const modeAtSend = currentMode   // ← snapshot NOW before any awaits
+
   chatHistory.push({ role: 'user', content: userMessage })
 
   const typingBlock = showTyping()
+
+  const modeIcons = {
+    general:  '../assets/icons/Chat.png',
+    study:    '../assets/icons/Study.png',
+    code:     '../assets/icons/Code.png',
+    research: '../assets/icons/Research.png'
+  }
 
   try {
     const response = await fetch('http://localhost:11434/api/chat', {
@@ -414,7 +434,7 @@ async function sendToAI(userMessage) {
       body: JSON.stringify({
         model: 'llama3.1:8b',
         messages: [
-          { role: 'system', content: getSystemPrompt(currentMode) },
+          { role: 'system', content: getSystemPrompt(modeAtSend) },
           ...chatHistory
         ],
         stream: true
@@ -423,17 +443,26 @@ async function sendToAI(userMessage) {
 
     typingBlock.remove()
 
-    // Create AI bubble for streaming
+    // Build streaming block WITH the pill immediately visible
+    const modePill = `
+      <div class="ai-mode-pill">
+        <img src="../assets/images/Logo_with_nobg.png" alt="" class="ai-leaf-icon">
+        <span class="ai-mode-badge">
+          <img src="${modeIcons[modeAtSend]}" alt="">
+          ${modeAtSend.charAt(0).toUpperCase() + modeAtSend.slice(1)}
+        </span>
+      </div>`
+
     const aiBlock = document.createElement('div')
     aiBlock.className = 'message-block ai-message'
     aiBlock.innerHTML = `
-      <div class="ai-avatar">
-        <img src="../assets/images/Logo_with_nobg.png" alt="">
-      </div>
-      <div class="ai-bubble" id="streaming-bubble"></div>`
+      <div class="ai-bubble">
+        ${modePill}
+        <div id="streaming-content"></div>
+      </div>`
     messagesArea.appendChild(aiBlock)
 
-    const streamBubble = document.getElementById('streaming-bubble')
+    const streamContent = document.getElementById('streaming-content')
     const reader = response.body.getReader()
     const decoder = new TextDecoder()
     let fullText = ''
@@ -448,19 +477,22 @@ async function sendToAI(userMessage) {
           const data = JSON.parse(line)
           if (data.message?.content) {
             fullText += data.message.content
-            streamBubble.innerHTML = formatAIResponse(fullText)
+            streamContent.innerHTML = formatAIResponse(fullText)
             scrollToBottom()
           }
         } catch (e) {}
       }
     }
 
-    streamBubble.removeAttribute('id')
+    streamContent.removeAttribute('id')
     chatHistory.push({ role: 'assistant', content: fullText })
 
-    // Save to storage
+    // Save with mode so reloads render correctly
     const chat = getCurrentChat()
-    chat.messages = chatHistory
+    chat.messages = chatHistory.map((m, i) => ({
+      ...m,
+      mode: m.role === 'assistant' ? modeAtSend : undefined
+    }))
     saveCurrentChat(chat)
 
   } catch (err) {
@@ -468,9 +500,6 @@ async function sendToAI(userMessage) {
     const errBlock = document.createElement('div')
     errBlock.className = 'message-block ai-message'
     errBlock.innerHTML = `
-      <div class="ai-avatar">
-        <img src="../assets/images/Logo_with_nobg.png" alt="">
-      </div>
       <div class="ai-bubble" style="color:#f09595">
         ❌ Cannot connect to Ollama.<br>
         Make sure Ollama is running at localhost:11434
@@ -586,7 +615,7 @@ function init() {
   // Load existing messages if returning to chat
   if (chat.messages && chat.messages.length > 0) {
     chatHistory = chat.messages
-    chat.messages.forEach(m => renderMessage(m.role, m.content))
+    chat.messages.forEach(m => renderMessage(m.role, m.content, m.mode))
   }
 
   // Send first message if coming from home screen

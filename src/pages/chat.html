@@ -41,7 +41,7 @@
     </div>
 
     <!-- Chat name — filled by chat.js -->
-    <div class="chat-title-bar" id="chat-title-bar"></div>
+    <div class="chat-title-bar">Mint.ai</div>
 
     <div class="titlebar-right">
       <button class="win-btn" id="btn-minimize">─</button>
@@ -87,9 +87,14 @@
           Projects
         </button>
       </div>
-      <div class="sidebar-section-label">Chats</div>
-      <!-- chat-history filled by chat.js -->
-      <div class="chat-history" id="chat-history"></div>
+
+      <!-- Chat history card (teal-bordered, dark-card bg) -->
+      <div class="chat-history-wrapper">
+        <div class="sidebar-section-label" style="padding: 10px 14px 6px;">Chats</div>
+        <!-- chat-history filled by chat.js renderMessage() -->
+        <div class="chat-history" id="chat-history"></div>
+      </div>
+
       <div class="sidebar-profile">
         <img src="../assets/icons/Profile.png" alt="">
         <span>Nigesh</span>
@@ -99,6 +104,7 @@
     <!-- Main Chat -->
     <div class="main-content">
       <div class="chat-screen">
+        <div class="chat-subtitle-bar" id="chat-title-bar"></div>
 
         <!-- Messages — filled by chat.js renderMessage() -->
         <div class="messages-area" id="messages-area"></div>
@@ -106,52 +112,50 @@
         <!-- Input Section -->
         <div class="chat-input-section">
 
-          <!-- Top bar: attach + mode pills + model label + mic -->
-          <div class="chat-bottom-bar">
-
-            <button class="input-icon-btn" id="attach-btn" title="Attach file">
-              <img src="../assets/icons/Plus.png" alt="attach">
-            </button>
-
-            <div class="mode-buttons chat-modes">
-              <button class="mode-btn" data-mode="general">
-                <img src="../assets/icons/Chat.png" alt="">
-                General
-              </button>
-              <button class="mode-btn" data-mode="study">
-                <img src="../assets/icons/Study.png" alt="">
-                Study
-              </button>
-              <button class="mode-btn" data-mode="code">
-                <img src="../assets/icons/Code.png" alt="">
-                Code
-              </button>
-              <button class="mode-btn" data-mode="research">
-                <img src="../assets/icons/Research.png" alt="">
-                Research
-              </button>
-            </div>
-
-            <div class="bar-right">
-              <span class="model-label">Llama 3.1</span>
-              <button class="input-icon-btn" id="mic-btn" title="Voice">
-                <img src="../assets/icons/Mic.png" alt="mic">
-              </button>
-            </div>
-
-          </div>
-
-          <!-- Textarea -->
+          <!-- Textarea with integrated controls -->
           <div class="chat-input-wrapper">
-            <textarea id="chat-input" placeholder="Reply..." rows="1"></textarea>
+            
+            <div class="input-top-row">
+              <textarea id="chat-input" placeholder="Reply..." rows="1"></textarea>
+              <button class="send-btn" id="send-btn">
+                <img src="../assets/icons/Send.png" alt="send">
+              </button>
+            </div>
+            
             <div class="input-bottom-bar">
-              <div></div>
-              <div class="input-right">
-                <button class="send-btn" id="send-btn">
-                  <img src="../assets/icons/Send.png" alt="send">
+              <div class="bottom-left">
+                <button class="input-icon-btn" id="attach-btn" title="Attach file">
+                  <img src="../assets/icons/Plus.png" alt="attach">
+                </button>
+
+                <div class="mode-buttons chat-modes">
+                  <button class="mode-btn" data-mode="general">
+                    <img src="../assets/icons/Chat.png" alt="">
+                    General
+                  </button>
+                  <button class="mode-btn" data-mode="study">
+                    <img src="../assets/icons/Study.png" alt="">
+                    Study
+                  </button>
+                  <button class="mode-btn" data-mode="code">
+                    <img src="../assets/icons/Code.png" alt="">
+                    Code
+                  </button>
+                  <button class="mode-btn" data-mode="research">
+                    <img src="../assets/icons/Research.png" alt="">
+                    Research
+                  </button>
+                </div>
+              </div>
+
+              <div class="bottom-right">
+                <span class="model-label">Llama 3.1</span>
+                <button class="input-icon-btn" id="mic-btn" title="Voice">
+                  <img src="../assets/icons/Mic.png" alt="mic">
                 </button>
               </div>
             </div>
+          </div>
           </div>
 
         </div>

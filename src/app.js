@@ -281,6 +281,6 @@ micBtn?.addEventListener('click', () => {
 document.querySelectorAll('.mode-btn img').forEach(img => {
   img.style.width = '14px'
   img.style.height = '14px'
-  img.style.filter = 'brightness(10)'
-  img.style.opacity = '0.7'
+  img.style.filter = ''
+  img.style.opacity = ''
 })
